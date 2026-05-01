@@ -214,13 +214,41 @@ int main() {
         {6,7,3}, {6,8,7}
     };
 
+    int choice;
     Graph graph(edges);
 
-    graph.printGraph();
-    graph.DFS(0);
-    graph.BFS(0);
-    graph.shortestPath(0);
-    graph.MST(0);
+    while (choice != 0) {
+        cout << "Smart City Menu:" << endl;
+        cout << "[1] Display network" << endl;
+        cout << "[2] BFS" << endl;
+        cout << "[3] DFS" << endl;
+        cout << "[4] Shortest paths" << endl;
+        cout << "[5] MST" << endl;
+        cout << "[0] Exit" << endl;
+        cout << "Enter choice: " << endl;
+        cin >> choice;
+
+        if (choice >= 1 && choice <= 5) {
+            if (choice == 1) {
+                graph.printGraph();
+            } else if(choice == 2) {
+                graph.BFS(0);
+            } else if(choice == 3) {
+                graph.DFS(0);
+            } else if(choice == 4) {
+                graph.shortestPath(0);
+            } else if(choice == 5) {
+                graph.MST(0);
+            }
+        }
+        else if (choice == 0) {
+            cout << "Exiting";
+        }
+        else {
+            cout << "Invalid";
+        }
+        cout << endl;
+    }
 
     return 0;
-}//10 minute commit
+}
