@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <climits>
 using namespace std;
 
 const int SIZE = 9;
@@ -111,7 +112,46 @@ public:
             }
         }
     }
+
+    void shortestPath(int start) {
+        vector<int> dist(SIZE, INT_MAX);
+        vector<bool> visited(SIZE, false);
+
+        dist[start] = 0;
+
+        for (int i = 0; i < SIZE - 1; i++) {
+            int u = -1;
+
+            // find unvisited node with smallest distance
+            for (int j = 0; j < SIZE; j++) {
+                if (!visited[j] && (u == -1 || dist[j] < dist[u])) {
+                    u = j;
+                }
+            }
+
+            visited[u] = true;
+
+            for (auto &neighbor : adjList[u]) {
+                int v = neighbor.first;
+                int weight = neighbor.second;
+
+                if (dist[u] != INT_MAX && dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                }
+            }
+        }
+
+        cout << "\n=======================================\n";
+        cout << "SHORTEST PATHS FROM NODE " << start << "\n";
+        cout << "=======================================\n";
+
+        for (int i = 0; i < SIZE; i++) {
+            cout << start << " -> " << i << " : " << dist[i] << endl;
+        }
+    }
 };
+
+void shortestPath(int);
 
 int main() {
     vector<Edge> edges = {
@@ -128,7 +168,7 @@ int main() {
     graph.printGraph();
     graph.DFS(0);
     graph.BFS(0);
+    graph.shortestPath(0);
 
     return 0;
 }
-//next 10 minute commit
