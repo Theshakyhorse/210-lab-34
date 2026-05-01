@@ -20,39 +20,64 @@ public:
         adjList.resize(SIZE);
 
         for (auto &edge : edges) {
-            int src = edge.src;
-            int dest = edge.dest;
-            int weight = edge.weight;
+            adjList[edge.src].push_back({edge.dest, edge.weight});
+            adjList[edge.dest].push_back({edge.src, edge.weight});
+        }
+    }
 
-            adjList[src].push_back(make_pair(dest, weight));
-            adjList[dest].push_back(make_pair(src, weight)); // undirected
+    string nodeName(int v) {
+        switch (v) {
+            case 0: return "Central Emergency Command Center";
+            case 1: return "Police Dispatch Hub";
+            case 2: return "City Surveillance Core";
+            case 3: return "North Precinct Station";
+            case 4: return "South Precinct Station";
+            case 5: return "Fire Response Logistics Center";
+            case 6: return "Hazardous Materials Unit";
+            case 7: return "Traffic Monitoring AI Center";
+            case 8: return "Emergency Drone Control Unit";
+            default: return "Unknown Facility";
         }
     }
 
     void printGraph() {
-        cout << "Graph's adjacency list:" << endl;
+        cout << "================================\n";
+        cout << "SMART CITY EMERGENCY NETWORK MAP\n";
+        cout << "================================\n\n";
+
         for (int i = 0; i < adjList.size(); i++) {
-            cout << i << " --> ";
-            for (Pair v : adjList[i])
-                cout << "(" << v.first << ", " << v.second << ") ";
-            cout << endl;
+            cout << "Node " << i << " (" << nodeName(i) << ") connects to:\n";
+
+            for (auto &p : adjList[i]) {
+                cout << "  -> Node " << p.first << " (" << nodeName(p.first)
+                     << ") - Signal Strength: " << p.second << "\n";
+            }
+            cout << "\n";
         }
     }
 
-    // DFS helper
     void DFSUtil(int v, vector<bool> &visited) {
         visited[v] = true;
-        cout << v << " ";
 
-        for (Pair neighbor : adjList[v]) {
-            if (!visited[neighbor.first])
+        cout << "Inspecting " << nodeName(v) << "\n";
+
+        for (auto &neighbor : adjList[v]) {
+            if (!visited[neighbor.first]) {
+                cout << "  -> Potential emergency link to "
+                     << nodeName(neighbor.first)
+                     << " - Strength: " << neighbor.second << "\n";
                 DFSUtil(neighbor.first, visited);
+            }
         }
     }
 
     void DFS(int start) {
         vector<bool> visited(SIZE, false);
-        cout << "DFS starting from vertex " << start << ":" << endl;
+
+        cout << "=======================================\n";
+        cout << "NETWORK TRACE (DFS) FROM COMMAND CENTER\n";
+        cout << "=======================================\n\n";
+
         DFSUtil(start, visited);
         cout << endl;
     }
@@ -64,21 +89,27 @@ public:
         visited[start] = true;
         q.push(start);
 
-        cout << "BFS starting from vertex " << start << ":" << endl;
+        cout << "=======================================\n";
+        cout << "LAYER-BY-LAYER ALERT DISTRIBUTION (BFS)\n";
+        cout << "=======================================\n\n";
 
         while (!q.empty()) {
             int v = q.front();
             q.pop();
-            cout << v << " ";
 
-            for (Pair neighbor : adjList[v]) {
+            cout << "Checking " << nodeName(v) << "\n";
+
+            for (auto &neighbor : adjList[v]) {
                 if (!visited[neighbor.first]) {
                     visited[neighbor.first] = true;
                     q.push(neighbor.first);
+
+                    cout << "  -> Next alert zone: "
+                         << nodeName(neighbor.first)
+                         << " - Strength: " << neighbor.second << "\n";
                 }
             }
         }
-        cout << endl;
     }
 };
 
@@ -95,7 +126,6 @@ int main() {
     Graph graph(edges);
 
     graph.printGraph();
-
     graph.DFS(0);
     graph.BFS(0);
 
