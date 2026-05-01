@@ -24,8 +24,8 @@ public:
             int dest = edge.dest;
             int weight = edge.weight;
 
-            adjList[src].push_back({dest, weight});
-            adjList[dest].push_back({src, weight});
+            adjList[src].push_back(make_pair(dest, weight));
+            adjList[dest].push_back(make_pair(src, weight)); // undirected
         }
     }
 
@@ -39,26 +39,15 @@ public:
         }
     }
 
-    // Custom DFS to match required order
+    // DFS helper
+    // Custom DFS helper
     void DFSUtil(int v, vector<bool> &visited) {
         visited[v] = true;
         cout << v << " ";
 
-        vector<int> order;
-
-        if (v == 0) order = {2,1};
-        else if (v == 2) order = {8,7,1};
-        else if (v == 8) order = {6,5};
-        else if (v == 6) order = {5,7};
-        else if (v == 5) order = {7};
-        else if (v == 7) order = {};
-        else if (v == 1) order = {4,3};
-        else if (v == 4) order = {3};
-        else if (v == 3) order = {};
-
-        for (int next : order) {
-            if (!visited[next])
-                DFSUtil(next, visited);
+        for (Pair neighbor : adjList[v]) {
+            if (!visited[neighbor.first])
+                DFSUtil(neighbor.first, visited);
         }
     }
 
@@ -107,6 +96,7 @@ int main() {
     Graph graph(edges);
 
     graph.printGraph();
+
     graph.DFS(0);
     graph.BFS(0);
 
