@@ -40,7 +40,6 @@ public:
     }
 
     // DFS helper
-    // Custom DFS helper
     void DFSUtil(int v, vector<bool> &visited) {
         visited[v] = true;
         cout << v << " ";
