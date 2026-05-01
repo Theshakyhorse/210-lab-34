@@ -149,6 +149,57 @@ public:
             cout << start << " -> " << i << " : " << dist[i] << endl;
         }
     }
+
+    void MST(int start) {
+        vector<int> key(SIZE, INT_MAX);
+        vector<bool> inMST(SIZE, false);
+        vector<int> parent(SIZE, -1);
+
+        key[start] = 0;
+
+        for (int count = 0; count < SIZE - 1; count++) {
+            int u = -1;
+
+        // pick minimum key vertex not yet in MST
+            for (int v = 0; v < SIZE; v++) {
+                if (!inMST[v] && (u == -1 || key[v] < key[u])) {
+                    u = v;
+                }
+            }
+
+            if (u == -1) break; // safety check
+
+            inMST[u] = true;
+
+            // update adjacent vertices
+            for (auto &neighbor : adjList[u]) {
+                int v = neighbor.first;
+                int weight = neighbor.second;
+
+                if (!inMST[v] && weight < key[v]) {
+                    key[v] = weight;
+                    parent[v] = u;
+                }
+            }
+        }
+
+        cout << "\n=======================================\n";
+        cout << "MINIMUM SPANNING TREE (PRIM'S ALGORITHM)\n";
+        cout << "=======================================\n";
+
+        int totalWeight = 0;
+
+        for (int i = 0; i < SIZE; i++) {
+            if (parent[i] != -1) {
+                cout << parent[i] << " -> " << i
+                    << " (Weight: " << key[i] << ")\n";
+                totalWeight += key[i];
+            }
+        }
+
+        cout << "---------------------------------------\n";
+        cout << "Total MST Weight: " << totalWeight << endl;
+    }
 };
 
 void shortestPath(int);
@@ -169,6 +220,7 @@ int main() {
     graph.DFS(0);
     graph.BFS(0);
     graph.shortestPath(0);
+    graph.MST(0);
 
     return 0;
 }
